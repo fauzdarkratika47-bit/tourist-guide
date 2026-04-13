@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Details</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background-image: linear-gradient(to right top, #fcfcfc, #fcf7fb, #fff2f5, #ffeee9, #ffecdb, #ffedd5, #ffeed0, #fdefcb, #feefcd, #fef0cf, #fff0d1, #fff1d3);
+}
+
+
+/* Container */
+.detail-container {
+  max-width: 1100px;
+  margin: 80px auto;
+  padding: 20px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #003d59;
+}
+
+/* Card */
+.card {
+  background-image: linear-gradient(to right top, #fcfcfc, #fcf7fb, #fff2f5, #ffeee9, #ffecdb, #ffedd5, #ffeed0, #fdefcb, #feefcd, #fef0cf, #fff0d1, #fff1d3);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Image */
+#image {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Title */
+h1 {
+  text-align: center;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 10px 5px;
+  border-radius: 25px;
+  background: linear-gradient(45deg,#ffcc00,#ff8800);
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+/* Sections */
+.section {
+  margin-top: 20px;
+}
+
+/* Info Box */
+.info-box {
+  background: #f4f4f4;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+/* Gallery */
+#gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 10px;
+}
+#gallery img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Form */
+.box {
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.box input, .box textarea {
+  width: 95%;
+  padding: 8px;
+  margin: 8px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.box button {
+  width: 100%;
+  padding: 10px;
+  background: orange;
+  border: none;
+  color: white;
+  border-radius: 5px;
+}
+
+/* Map */
+iframe {
+  width: 100%;
+  height: 300px;
+  border-radius: 10px;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  #image { height: 220px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="detail-container">
+<div class="card">
+
+<h1 id="name"></h1>
+<img id="image">
+
+<p id="desc"></p>
+<p id="paragraph"></p>
+
+<a id="websiteBtn" class="btn" target="_blank">🌐 Official Website</a>
+
+<!-- PLACE INFO -->
+<div id="placeInfo" class="section info-box" style="display:none;">
+  <h3>📍 Place Info</h3>
+  <p><b>Timings:</b> <span id="timings"></span></p>
+  <p><b>Entry Fee:</b> <span id="entryFee"></span></p>
+  <p><b>Best Time:</b> <span id="bestTime"></span></p>
+  <p><b>Nearby:</b> <span id="nearby"></span></p>
+</div>
+
+<!-- HOTEL INFO -->
+<div id="hotelInfo" class="section info-box" style="display:none;">
+  <h3>🏨 Hotel Info</h3>
+
+  <b>Rooms:</b>
+  <ul id="rooms"></ul>
+
+  <b>Facilities:</b>
+  <ul id="facilities"></ul>
+
+  <p><b>Check-in:</b> <span id="hotelTimings"></span></p>
+  <p><b>Tariff:</b> <span id="hotelEntryFee"></span></p>
+  <p><b>Best Time:</b> <span id="hotelBestTime"></span></p>
+  <p><b>Nearby:</b> <span id="hotelNearby"></span></p>
+</div>
+
+<!-- FOOD INFO -->
+<div id="foodInfo" class="section info-box" style="display:none;">
+  <h3>🍽 Food Info</h3>
+
+  <b>Varieties:</b>
+  <ul id="varieties"></ul>
+
+  <b>Best Places:</b>
+  <ul id="bestPlaces"></ul>
+
+  <p><b>Price Range:</b> <span id="priceRange"></span></p>
+  <p><b>Best Time:</b> <span id="foodBestTime"></span></p>
+</div>
+
+<!-- MAP -->
+<div id="mapSection" class="section" style="display:none;">
+  <h3>📍 Location</h3>
+  <iframe id="mapFrame"></iframe>
+</div>
+
+<!-- GALLERY -->
+<div class="section">
+  <h3>📸 Gallery</h3>
+  <div id="gallery"></div>
+</div>
+
+<!-- BOOKING -->
+<div class="box">
+  <h3>🛎 Book Now</h3>
+  <input type="text" id="userName" placeholder="Your Name">
+  <input type="date" id="date">
+  <button onclick="bookNow()">Book Now</button>
+</div>
+
+<!-- FEEDBACK -->
+<div class="box">
+  <h3>💬 Feedback</h3>
+  <input type="text" id="fname" placeholder="Your Name">
+  <textarea id="msg" placeholder="Write feedback"></textarea>
+  <button onclick="saveFeedback()">Send</button>
+</div>
+
+</div>
+</div>
+
+<script>
+let item = JSON.parse(localStorage.getItem("selectedItem")) || {};
+
+// Basic
+name.innerText = item.name || "";
+image.src = item.img || "";
+desc.innerText = item.desc || "";
+paragraph.innerText = item.paragraph || "";
+
+// Website Fix ✅
+if(item.website){
+  websiteBtn.href = item.website;
+}else{
+  websiteBtn.style.display = "none";
+}
+
+// Place
+if(item.type === "place"){
+  placeInfo.style.display = "block";
+  timings.innerText = item.timings || "N/A";
+  entryFee.innerText = item.entryFee || "N/A";
+  bestTime.innerText = item.bestTime || "N/A";
+  nearby.innerText = item.nearby || "N/A";
+}
+
+// Hotel
+if(item.type === "hotel"){
+  hotelInfo.style.display = "block";
+
+  (item.rooms || []).forEach(r=>{
+    let li=document.createElement("li");
+    li.innerText=r;
+    rooms.appendChild(li);
+  });
+
+  (item.facilities || []).forEach(f=>{
+    let li=document.createElement("li");
+    li.innerText=f;
+    facilities.appendChild(li);
+  });
+
+  hotelTimings.innerText = item.timings || "N/A";
+  hotelEntryFee.innerText = item.entryFee || "N/A";
+  hotelBestTime.innerText = item.bestTime || "N/A";
+  hotelNearby.innerText = item.nearby || "N/A";
+}
+
+// Food
+if(item.type === "food"){
+  foodInfo.style.display = "block";
+
+  (item.varieties || []).forEach(v=>{
+    let li=document.createElement("li");
+    li.innerText=v;
+    varieties.appendChild(li);
+  });
+
+  (item.bestPlaces || []).forEach(p=>{
+    let li=document.createElement("li");
+    li.innerText=p;
+    bestPlaces.appendChild(li);
+  });
+
+  priceRange.innerText = item.priceRange || "N/A";
+  foodBestTime.innerText = item.bestTime || "N/A";
+}
+
+// Map
+if(item.map){
+  mapSection.style.display = "block";
+  mapFrame.src = item.map;
+}
+
+// Gallery
+(item.gallery || []).forEach(img=>{
+  let i=document.createElement("img");
+  i.src = img;
+  gallery.appendChild(i);
+});
+
+// Booking
+function bookNow(){
+  let nameVal = userName.value;
+  let dateVal = date.value;
+
+  let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+  bookings.push({place:item.name,name:nameVal,date:dateVal});
+  localStorage.setItem("bookings", JSON.stringify(bookings));
+
+  alert("Booking Confirmed ✅");
+}
+
+// Feedback
+function saveFeedback(){
+  let n = fname.value;
+  let m = msg.value;
+
+  let feedbacks = JSON.parse(localStorage.getItem("feedbacks")) || [];
+  feedbacks.push({place:item.name,name:n,msg:m});
+  localStorage.setItem("feedbacks", JSON.stringify(feedbacks));
+
+  alert("Feedback Saved ✅");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    animation: slidein 1s forwards;
+    background-image: linear-gradient(to right top, #fcfcfc, #fcf7fb, #fff2f5, #ffeee9, #ffecdb, #ffedd5, #ffeed0, #fdefcb, #feefcd, #fef0cf, #fff0d1, #fff1d3);
+}
+
+/* Navbar */
+nav {
+    background:#003d59;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    position: fixed; /* fixed navbar */
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    padding: 8px 0;
+    margin: 0;
+    line-height: 1.2;
+}
+
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding-right: 50px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+nav h1 {
+    margin: 20px;
+    margin-top: 20px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+/* Hero Section */
+.hero {
+  background: url('../image/tajmahal.jpg') no-repeat center/cover; 
+  background-size: cover;   /* image full cover*/
+  height: 100vh;            /* full screen height */
+  position: relative;
+  background-position: center;
+    
+}
+.carousel  {
+    display: flex;
+    width: 300%;
+    animation: slide 10s 1;
+}
+.slide {
+    width: 100%;
+    flex-shrink: 0;
+    height: 100vh;
+}
+.slide img {
+    height: 100vh;
+    width: 100vw;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.overlay {
+position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+
+}
+.overlay h2 {
+    font-size: 70px;
+    margin: 0;
+}
+.overlay p {
+    font-size: 25px;
+}
+.btn {
+    padding: 10px 20px;
+    background: #003d59;
+    color: white;
+    border-radius: 10px;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+/* Places Section */
+.places {
+    padding: 40px;
+    text-align: center;
+    font-size:20px;
+    color: #003d59;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    padding: 0 50px;
+}
+.card {
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: 0.3s;
+  background-color:#003d59;
+  color:white;
+  min-height: 380px; /* sab cards ki minimum height same */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card img {
+  width: 100%;
+  height: 220px;       /* fixed height */
+  object-fit: cover;   /* crop karega aur size equal banayega */
+  display: block;
+}
+.card p {
+    padding: 0 10px 15px;
+    font-size: 14px;
+}
+.card h3 {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+    background:#003d59;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+/* Animations */
+@keyframes slidein {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+/* @keyframes slide {
+    0% { transform: translateX(0); }
+    33% { transform: translateX(-100%); }
+    66% { transform: translateX(-200%); }
+    100% { transform: translateX(0); }
+} */
+
+
+
+

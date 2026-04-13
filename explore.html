@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore Agra</title>
+
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background-image: linear-gradient(to right top, #fcfcfc, #fcf7fb, #fff2f5, #ffeee9, #ffecdb, #ffedd5, #ffeed0, #fdefcb, #feefcd, #fef0cf, #fff0d1, #fff1d3);
+}
+
+.header {
+    background:#003d59;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+/* Search */
+.search-box {
+    text-align: center;
+    margin: 20px;
+    position: relative;
+}
+
+.search-box input {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.search-box input, select {
+    padding: 10px;
+    margin: 5px;
+    width: 200px;
+}
+
+/* Suggestions */
+#suggestions {
+    position: absolute;
+    background: white;
+    width: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 1px solid #ccc;
+    display: none;
+    z-index: 1000;
+}
+
+
+#suggestions div {
+    padding: 8px;
+    cursor: pointer;
+}
+
+#suggestions div:hover {
+    background: #eee;
+}
+
+/* Cards */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    background:#003d59;
+    width: 410px;
+    margin: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 10px whitesmoke;
+    overflow: hidden;
+    transition: 0.3s;
+    display: inline-block;
+    color: white;
+
+    }
+
+
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    width: 100%;
+    height: 250px;
+}
+
+.card h3, .card p {
+    padding: 10px;
+    color: white;
+}
+
+/* Rating */
+.stars {
+    color: gold;
+    padding: 0 10px 10px;
+    cursor: pointer;
+}
+
+/* Map */
+.map {
+    margin: 30px;
+    text-align: center;
+}
+  /* new add  */
+
+
+
+@media (max-width: 768px) {
+
+    .search-box input, select {
+        width: 90%;
+    }
+
+    .card {
+        width: 90%;
+    }
+
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    iframe {
+        width: 100%;
+        height: 250px;
+    }
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>Explore Agra</h1>
+</div>
+
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search...">
+    
+    <select id="filter">
+        <option value="all">All</option>
+        <option value="place">Places</option>
+        <option value="hotel">Hotels</option>
+        <option value="food">Food</option>
+    </select>
+
+    <div id="suggestions"></div>
+</div>
+
+<div class="container" id="results"></div>
+
+<!-- Google Map -->
+<div class="map">
+    <h2>📍 Agra Location</h2>
+    <iframe 
+        src="https://www.google.com/maps?q=agra&output=embed"
+        width="80%" height="300">
+    </iframe>
+</div>
+
+<script>
+let data = [
+    // places
+    {
+  name: "Taj Mahal",
+  type: "place",
+  img: "image/3tajmahal.jpg",
+  desc: "Symbol of love",
+  rating: 5,
+  timings: "6:00 AM – 6:30 PM (Closed on Fridays)",
+  entryFee: "₹50 (Indian), ₹1100 (Foreigners)",
+  bestTime: "Sunrise or Full Moon nights",
+  nearby: "Mehtab Bagh, Agra Fort, Taj Nature Walk",
+  paragraph: "The Taj Mahal is a famous monument located in Agra, India it was built by emperor Shah Jahan in memory of his beloved wife mumtaz Mahal It was designated as UNESCO World Heritage the Taj Mahal is made of white marble and is known For its beautiful architecture. It is considered one of the Seven Wonders of the World The monument took around 20 years to complete and finished in 1653 The Taj Mahal attract millions of visitors from all over the world every year It is a symbol of love and is often called the symbol of eternal love The Taj Mahal complex include a mosque a guest house, and beautiful garden The monument changes its color depending on the time of day and lighting conditions  Reservation effort are being made to protect and maintain the Kazmir for future generations Contain this wrong commitment and you stop telling me the inside of Taj Mahal it's decorated with precious stones",
+  gallery: [
+    "image/tajview1.jpg",
+    "image/tajview2.jpg",
+    "image/tajview3.jpg",
+    "image/tajview4.jpg",
+    "image/tajview5.jpg",
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.123456789!2d78.042155!3d27.175015!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3974775f0f0f0f0f%3A0xabcdef123456789!2sTaj%20Mahal!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-1234567",
+    email: "info@tajmahalagra.com",
+  },
+  website: "https://www.tajmahal.gov.in/",
+
+
+    },
+  {
+  name: "Agra Fort",
+  type: "place",
+  img: "image/2agrafort.webp",
+  desc: "Historic fort",
+  rating: 4,
+  timings: "Sunrise to Sunset",
+  entryFee: "₹50 (Indian), ₹650 (Foreigners)",
+  bestTime: "Winter mornings or evenings",
+  nearby: "Taj Mahal (2 km), Mehtab Bagh",
+  paragraph: "Located near the gardens of iconic Taj Mahal, The Agra Fort is a 18th century Mughal monument and a UNESCO World Heritage Site, This redstone fortress in Agra District,Uttar Pradesh stretches Across 2.5km and once house the Imperial City of the Mughal rulers . Agra Fort built by Emperor Akbar in 1565 AD This Fort is a masterpiece of design end construction within the fault are a number of exquisite buildings, Including the Moti masjid Diwan-i-Aam, Diwan-i-khas And Maussaman Burj, Where Emperor Shahza had died in imprisonment Jahangir Palace, Kas mehl and Sheesh mehl are the other important monuments inside the Fort",
+
+  gallery: [
+    "image/agrafortview1.jpg",
+    "image/agrafortview2.jpg",
+    "image/agrafortview3.jpg",
+    "image/agrafortview4.jpg",
+    "image/agrafortview5.jpg",
+  ],
+    map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.567890123!2d78.008075!3d27.179514!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3974775fabcdef%3A0x123456789abcdef!2sAgra%20Fort!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-2222222",
+    email: "info@agrafort.com"
+  },
+   website: "https://agra.nic.in/tourist-place/agra-fort/",
+
+},
+{
+  name: "Fatehpur Sikri",
+  type: "place",
+  img: "image/fathepur.jpg",
+  desc: "Mughal Architecture",
+  rating: 4,
+  timings: "Sunrise to Sunset",
+  entryFee: "₹50 (Indian), ₹610 (Foreigners)",
+  bestTime: "October to March (pleasant weather)",
+  nearby: "Buland Darwaza, Jama Masjid, Panch Mahal",
+  paragraph:"Fatehpur Sikri, a city predominantly in red sand-stone, situated at a distance of 37 kms from Agra, was built by the Mughal Emperor Jalal-ud-din Mohammad Akbar, in honour of the great Sufi saint Sheikh Salim Chisti ; its magnificence and uniqueness offers a fine example of the emperor's architectural finesse. \nAkbar's tolerant religious views and interest in literature, architecture and fine arts gave the buildings at Fatehpur Sikri a charismatic blend of Islamic and Hindu elements in their style and design.At Fatehpur Sikri during sunset and sunrise, the turrets and domes create shadows and silhouette against the copper red sky; which truly is an inspirational scene for a painter's canvas or the visitor's eyes.Fatehpur Sikri is enclosed by a 11 kms long fortification wall interspersed with numerous gateways. The remains of the great city; the Imperial Palace Complex, the intricately built marble tomb of the great Sufi saint, Sheikh Salim Chisti and the grand mosque are second only to The Taj Mahal, a benchmark of architectural beauty.A rich imagination is all it takes to transport any visitor to the era of gold tapestry, drapes, rich plush carpets and the royalty of the Mughal courts.",
+   gallery: [
+    "image/fathepurview1.jpg",
+    "image/fathepurview2.jpg",
+    "image/fathepurview3.jpg",
+    "image/fathepurview4.jpg",
+    "image/fathepurview5.jpg",
+
+  ],
+  map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3621.123456789!2d77.6675!3d27.0937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3973fd123456789%3A0xabcdef987654321!2sFatehpur%20Sikri!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-561-3333333",
+    email: "info@fatehpursikri.com"
+  },
+  website: "https://culture.gov.in/fatehpur-sikri",
+
+
+},
+   {
+  name: "Gurudwara Guru ka Tal",
+  type: "place",
+  img: "image/gurukatal.jpg",
+  desc: "Historic Sikh pilgrimage site",
+  rating: 4,
+  timings: "5:00 AM – 10:00 PM",
+  entryFee: "No entry fee",
+  bestTime: "Morning or during Gurpurab celebrations",
+  nearby: "Akbar’s Tomb (Sikandra), Agra city markets",
+  paragraph:"Gurudwara Guru Ka Taal in Agra is a revered Sikh Gurudwara, associated with Guru Hargobind Sahib Ji, the sixth Guru of the Sikhs. Situated on the banks of the Yamuna River, this historical Gurudwara holds great significance for Sikhs and is an important site of pilgrimage.\n It is believed to be the place where Guru Hargobind Ji stayed while visiting Agra, and the Taal (lake) here is named in his honor. The Gurudwara features beautiful architecture, with serene surroundings that provide a peaceful atmosphere for worship and reflection.\nDevotees and visitors can participate in the daily prayers, listen to the continuous recitation of the Guru Granth Sahib, and experience the tradition of Langar, the free community meal served to all. The Gurudwara is open to all visitors and offers a welcoming environment for people of all backgrounds to come and pay their respects.",
+   gallery: [
+    "image/gurudwaraview1.jpg",
+    "image/gurudwaraview2.jpg",
+    "image/gurudwaraview3.jpg",
+    "image/gurudwaraview4.jpg",
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3621.567890123!2d78.0055!3d27.2075!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477123456789%3A0xabcdef987654321!2sGuru%20Ka%20Tal!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4444444",
+    email: "info@gurukatalagra.com"
+  },
+  website: "https://sgpc.net/sri-harmandir-sahib/",
+
+},
+
+ {
+  name: "mehtab bagh",
+  type: "place",
+  img: "image/mehtabagh.gif",
+  desc: "Taj View Point",
+  rating: 4,
+  timings: "Sunrise to Sunset",
+  entryFee: "₹50 (Indian), ₹610 (Foreigners)",
+  bestTime: "October to March (pleasant weather)",
+  nearby: "Buland Darwaza, Jama Masjid, Panch Mahal",
+  paragraph:"Mehtab Bagh, also known as the Moonlight Garden, is located next to the Taj Mahal. This stunning garden offers a mesmerising experience from morning to night. It's said to be the perfect spot to enjoy a breathtaking view of the Taj Mahal without the usual crowds. Legend has it that Emperor Shah Jahan designed the garden so that he could admire the Taj Mahal in all its beauty. And on moonlit nights, the reflection of the Taj Mahal in the water of Mehtab Bagh is simply magical! \nBuilt in the Charbagh style, the garden featured beautiful white walkways, grand fountains with reflecting pools and airy pavilions decorated with colourful fruit trees reminiscent of Paradise Gardens. The garden was initially designed as a crescent shape with pools and fountains but was eventually changed to its current square layout. This was due to the frequent flooding during the early 1900s, which damaged many of the older features. The Archaeological Survey of India (ASI) restored it to its original state by 1994.",
+   gallery: [
+    "image/mehtabview1.jpg",
+    "image/mehtabview2.jpg",
+    "image/mehtabview3.jpg",
+    "image/mehtabview4.jpg",
+  ],
+  map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0410!3d27.1800!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sMehtab%20Bagh!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-6666666",
+    email: "info@mehtabbaghagra.com",
+  },
+website: "https://www.incredibleindia.gov.in/en/uttar-pradesh/agra/mehtab-bagh",
+
+},
+
+ {
+  name: "Taj Nature Walk",
+  type: "place",
+  img: "image/tajnature.jpg",
+  desc: "Scenic eco-park near Taj Mahal",
+  rating: 5,
+  timings: "6:00 AM – 6:00 PM",
+  entryFee: "₹20 (Indian), ₹100 (Foreigners)",
+  bestTime: "Morning for bird watching or evening stroll",
+  nearby: "Taj Mahal, Mehtab Bagh, Yamuna Riverfront",
+  paragraph:"The Taj nature walk is located on Fatehabad road, 500 meter away from Taj Mahal east gate. It spreads up to the right bank of the river Yamuna. The Taj nature walk is a green belt area, having variety of thorny and broad-leaved tree species dotted with high grasslands. These high grassland mounds provide a unique platform to enjoy the beauty of Taj Mahal from different directions. The Taj has variation in its hue, colour and radiance with respect to time and season. Along with six grass mounds, there is a nine km long nature trail providing visuals of Taj Mahal from different settings.",
+   gallery: [
+    "image/naturewalkview1.jpg",
+    "image/naturewalkview2.jpg",
+    "image/naturewalkview3.jpg",
+    "image/naturewalkview4.jpg",
+  ],
+  map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0450!3d27.1700!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sTaj%20Nature%20Walk!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-5555555",
+    email: "info@tajnaturewalk.com",
+  },
+  website: "https://www.tajmahotsav.org/destination_taj_nature_walk.aspx",
+
+},
+{
+  name: "Akbar Tomb",
+  type: "place",
+  img: "image/akbartomb.jpg",
+  desc: "Akbar's Memorial",
+  rating: 4,
+  timings: "Sunrise to Sunset",
+  entryFee: "₹50 (Indian), ₹610 (Foreigners)",
+  bestTime: "October to March (pleasant weather)",
+  nearby: "Buland Darwaza, Jama Masjid, Panch Mahal",
+  paragraph: "Emperor Akbar's Tomb stands as an architectural masterpiece in Sikandra and testifies to his lasting legacy as Mughal Emperor. This grand mausoleum seamlessly fuses Hindu, Islamic and Persian elements in order to reflect Akbar's ideals of inclusivity, peace and unity; his influence over Sikandar city can be seen here forever! It remains an incredible monument today. \nEmperor Akbar's Tomb is not only one of Sikandra's largest monuments but also among India's best preserved Mughal structures, captivating history enthusiasts from near and far. Its grandeur and historical importance make it a must-visit location, offering visitors a window into Mughal heritage. As you explore this magnificent tomb, you may even spot langurs - black-faced monkeys that have taken shelter within the lush gardens surrounding its mausoleum.",
+     gallery: [
+    "image/akbartombview1.jpg",
+    "image/akbartombview2.jpg",
+    "image/akbartombview3.jpg",
+    "image/akbartombview4.jpg",
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3621.987654321!2d78.0050!3d27.2070!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sAkbar's%20Tomb%20Sikandra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-7777777",
+    email: "info@akbarstombagra.com",
+  },
+  website: "https://asiagracircle.in/monuments.html",
+
+},
+ {
+  name: "Itmad‑ud‑Daulah",
+  type: "place",
+  img: "image/etmadaula.jpg",
+  desc: "Known as Baby Taj",
+  rating: 4,
+  timings: "Sunrise to Sunset",
+  entryFee: "₹30 (Indian), ₹310 (Foreigners)",
+  bestTime: "Morning or evening for photography",
+  nearby: "Yamuna Riverfront, Mehtab Bagh, Taj Mahal",
+  paragraph:"Itmad-ud-Daulah’s Tomb is in the Moti Bagh area of Agra. It’s 6 km away from Taj Mahal, on the way to Mehtab Bagh. The mausoleum stands as a large jewel box along the banks of the Yamuna River, looking like a smaller replica of the Taj Mahal. \nAlso referred to as “Baby Taj”, I’timad-ud-Daulah’s Tomb Agra is a mausoleum of a minister in the Mughal court. I’timad-ud-Daulah (earlier known as Mir Gheyas Beg) was the father of Nur Jahan, the wife of Jahangir. And she got this tomb built.\nThe Tomb of Itimad-ud-Daulah in Agra stands gracefully amidst a Charbagh-style garden. The beautifully landscaped garden and intricate inlay work on marble captivate anyone who visits the place. If you’re in Agra, you must visit this one-of-a-kind structural landmark of the city \nIt was the first tomb in India to be made entirely of marble. It marked the transition from the earlier Mughal establishments of red sandstone to full-fledged white marble marvels. It’s also considered to be an inspiration for the Taj Mahal.\nWhile I’timad-ud-Daulah’s tomb may lack the magnificence of many Mughal-era structures, it’s proof of the artistic prowess of the time. It’s an embodiment of their lavish artistic sensibilities.",
+     gallery: [
+    "image/itmaduddaulahview1.jpg",
+    "image/itmaduddaulahview2.jpg",
+    "image/itmaduddaulahview3.jpg",
+    "image/itmaduddaulahview4.jpg",
+  ],
+    map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0420!3d27.1900!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sItmad-ud-Daulah's%20Tomb!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-8888888",
+    email: "info@babytaajagra.com",
+  },
+  website: "https://www.incredibleindia.gov.in/en/uttar-pradesh/agra/itimad-ud-daulahs-tomb",
+},
+{
+  name: "Chini Ka Rauza",
+  type: "place",
+  img: "image/chinikarauza.jpg",
+  desc: "Tomb Of Afzal Khan Shirazi",
+  rating: 3,
+  timings: "Sunrise to Sunset",
+  entryFee: "No Entry Fee",
+  bestTime: "Morning ",
+  nearby: "Itmad‑ud‑Daulah and Yamuna River",
+  paragraph:"Chini Ka Rauza is a mausoleum located in Agra, India. It was built in the 17th century and is known for its beautiful Persian-style architecture. The tomb is made of glazed tiles and has intricate carvings and calligraphy on its walls. It is the final resting place of Allama Afzal Khan Mullah, who was a scholar and poet during the reign of Mughal Emperor Shah Jahan. The Chini Ka Rauza is a popular tourist attraction in Agra and is often visited by those interested in Mughal history and architecture. The mausoleum is a testament to the rich cultural heritage of India and is a must-visit for anyone traveling to Agra.",
+  gallery: [
+    "image/chinirozaview1.jpg",
+    "image/chinirozaview2.jpg",
+    "image/chinirozaview3.jpg",
+    "image/chinirozaview4.jpg",
+  ],
+    map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3621.567890123!2d78.0500!3d27.2000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sChini%20Ka%20Rauza!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-9999999",
+    email: "info@chinikarauzaagra.com",
+  },
+  website: "https://www.incredibleindia.gov.in/en/uttar-pradesh/agra/chini-ka-rauza"
+ },
+
+// hotels
+ {
+  type: "hotel",
+  name: "Hotel Taj View, Agra",
+  img: "image/tajhotel.jpeg",
+  desc: "A luxury hotel offering panoramic views of the Taj Mahal.",
+  rating:4,
+  paragraph: "Hotel Taj View is known for its prime location and breathtaking views of the Taj Mahal. Guests can enjoy spacious rooms, fine dining, and warm hospitality. The hotel combines modern amenities with traditional charm, making it a popular choice for both leisure and business travellers.",
+  rooms: [
+    "Deluxe Rooms with Taj Mahal view",
+    "Executive Suites",
+    "Luxury Suites"
+  ],
+  facilities: [
+    "Panoramic Taj Mahal views",
+    "Swimming pool",
+    "Fine dining restaurants",
+    "Spa and wellness centre",
+    "Conference and banquet halls"
+  ],
+  timings: "Check-in: 2:00 PM | Check-out: 12:00 PM",
+  entryFee: "Room tariffs start from ₹7,000 per night",
+  bestTime: "October to March for pleasant weather",
+  nearby: "Taj Mahal (1 km), Agra Fort (3 km), Mehtab Bagh (4 km)",
+  gallery: [
+    "image/tajviewroom.jpg",
+    "image/tajviewpool.jpg",
+    "image/tajviewrooftop.jpg",
+    "image/tajviewresturant.jpg",
+    "image/tajviewlobby.jpg",
+    "image/tajviewspa.jpg",
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0425!3d27.1755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sHotel%20Taj%20View%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-1234567",
+    email: "reservations@tajview,agra.com"
+  },
+  website: "https://www.tajhotels.com/en-in/taj/tajview-agra/"
+
+},
+{
+  type: "hotel",
+  name: "Oberoi Amarvilas, Agra",
+  img: "image/oberoi.jpg",
+  desc: "A world-class luxury hotel offering uninterrupted views of the Taj Mahal.",
+  rating:5.5,
+  
+  paragraph: "Oberoi Amarvilas is renowned for its Mughal-inspired architecture, landscaped gardens, and unmatched hospitality. Every room offers a direct view of the Taj Mahal. Guests can enjoy fine dining at Bellevue, relax at the Oberoi Spa, and experience royal luxury with personalized services.",
+  rooms: [
+    "Premier Rooms with Taj Mahal view",
+    "Deluxe Suites with private balcony",
+    "Luxury Suites with personalized butler service",
+    "Presidential Suite with grand interiors"
+  ],
+  facilities: [
+    "Uninterrupted Taj Mahal views from all rooms",
+    "Oberoi Spa with Ayurvedic therapies",
+    "Fine dining restaurants (Bellevue, Esphahan)",
+    "Outdoor swimming pool",
+    "24-hour butler service",
+    "Conference and banquet facilities"
+  ],
+  timings: "Check-in: 2:00 PM | Check-out: 12:00 PM",
+  entryFee: "Room tariffs start from ₹27,000-₹65,000 per night",
+  bestTime: "October to March for clear Taj Mahal views",
+  nearby: "Taj Mahal (600 meters), Agra Fort (3 km), Mehtab Bagh (4 km)",
+  gallery: [
+    "image/oberoiroom.jpg",
+    "image/oberoispa.jpg",
+    "image/oberoibanquet.jpg",
+    "image/oberoipool.jpg",
+    "image/oberoiview.jpg",
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0429!3d27.1756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sThe%20Oberoi%20Amarvilas%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-2234567",
+    email: "reservations@oberoiamarvilas.com",
+},
+website: "https://www.oberoihotels.com/hotels-in-agra-amarvilas-resort/overview",
+
+},
+   {
+  type: "hotel",
+  name: "Radisson Hotel Agra",
+  img: "image/radissonhotel.jpg",
+  desc: "A premium 5-star hotel offering unmatched views of the Taj Mahal.",
+  rating:5,
+  paragraph: "Radisson Hotel Agra blends modern luxury with old-world charm. Guests can savour Indian classics at Jhankar, dine under the stars at SkyDeck, and enjoy a refreshing pool, soothing spa, and pet-friendly hospitality.",
+  rooms: ["Deluxe Rooms", "Executive Suites", "Presidential Suite"],
+  facilities: ["Infinity pool", "Spa", "Fitness centre", "Dining options", "Conference halls", "Pet-friendly services"],
+  timings: "Check-in: 3:00 PM | Check-out: 12:00 PM",
+  entryFee: "Room tariffs start from ₹3,300 to ₹5,500 per night",
+  bestTime :"October to March",
+  nearby: "Taj Mahal Road, Near Raj Palace, Telipara, Tajganj, Agra",
+    gallery: [
+    "image/radissonroom.jpg",
+    "image/radissonbar.jpg",
+    "image/radissonbanquet.jpg",
+    "image/radissonpool.jpg",
+    "image/radissonlobby.jpg",
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0427!3d27.1760!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sRadisson%20Hotel%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-2244444",
+    email: "reservations@radissonagra.com",
+   
+  },
+   website: "https://www.radissonhotels.com/en-us/hotels/radisson-agra"
+},
+
+{
+  type: "hotel",
+  name: "ITC Mughal, Agra",
+  img: "image/itcmughal.jpg",
+  desc: "A luxury hotel inspired by Mughal architecture, spread across 35 acres of gardens.",
+  rating: 5.5,
+  paragraph: "ITC Mughal offers a royal experience with Mughal-inspired architecture and lush gardens. Guests can indulge in award-winning spa therapies, enjoy fine dining at Peshawri, and relax in opulent suites.",
+  rooms: ["Mughal Chambers", "Royal Suites", "Presidential Villas"],
+  facilities: ["Mughal-inspired spa","Fine dining at Peshawri","Outdoor pool","Banquet halls","Kids play area"],
+  timings: "Check-in: 3:00 PM | Check-out: 12:00 PM",
+  entryFee: "Room tariffs start from ₹ 11,625 per night +₹ 2,093 taxes & fees",
+  bestTime: "October to March",
+  nearby: " Fatehabad road,Taj Ganj, Agra, Uttar Pradesh 1.6 km drive to Taj Mahal (East Gate",
+   gallery: [
+    "image/itcroom.jpg",
+    "image/itcbar.jpg",
+    "image/itcbanquet.jpg",
+    "image/itcpool.jpg",
+    "image/itclobby.jpg",
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0428!3d27.1758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sITC%20Mughal%20Hotel%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-2233333",
+    email: "reservations@itcmughalagra.com",
+  },
+    website: "https://www.itchotels.com/in/en/itcmughal-agra",
+
+},
+
+   {
+  type: "hotel",
+  name: "JP Palace, Agra",
+  img: "image/jaypeepalace.jpg",
+  desc: "A grand hotel offering luxury and elegance in Agra.",
+  rating: 4,
+  paragraph: "JP Palace is known for its majestic architecture, spacious rooms, and fine dining options. It offers a luxurious stay close to Agra’s attractions.",
+  rooms: ["Deluxe Rooms","Luxury Suites","Presidential Suite"],
+  facilities: ["Swimming pool","Spa","Restaurants","Banquet halls","Conference facilities"],
+  timings: "Check-in: 2:00 PM | Check-out: 12:00 PM",
+  entryFee: "Room tariffs start from ₹ 6,228 per night + ₹ 335 taxes & fees",
+  bestTime: "October to March",
+  nearby: "Jaypee Palace Hotel and Convention Centre Fatehabad Road, Agra Uttar Pradesh 3.1 km drive to Shilpgram",
+   gallery: [
+    "image/jppalaceroom.jpg",
+    "image/jppalaceclub.jpg",
+    "image/jppalaceconfrence.jpg",
+    "image/jppalacepool.jpg",
+    "image/jppalacegrandbuffet.jpg",
+  ],
+    map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0426!3d27.1757!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sJaypee%20Palace%20Hotel%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-2330800",
+    email: "reservations@jaypeehotels.com",
+  },
+   website: "https://www.jaypeehotels.com/hotel/jaypee-palace-hotel-convention-centre-agra/"
+},
+    {
+  type: "hotel",
+  name: "Clarks Shiraz, Agra",
+  img: "image/clarkshiraz.jpg",
+  desc: "A heritage hotel offering panoramic views of the Taj Mahal.",
+  rating: 4,
+  paragraph: "Clarks Shiraz combines heritage charm with modern amenities. Guests can enjoy rooftop dining, spacious rooms, and warm hospitality.",
+  rooms: ["Deluxe Rooms","Luxury Suites"],
+  facilities: ["Rooftop restaurant","Swimming pool","Banquet halls","Spa"],
+  timings: "Check-in: 12:00 PM | Check-out: 11:00 AM",
+  entryFee: "Room tariffs start from ₹6,000 per night",
+  bestTime: "October to March",
+  nearby: " Taj Road 1.8 km drive to Taj Mahal (West Gate",
+    gallery: [
+    "image/clarksroom.jpg",
+    "image/clarkspool.jpg",
+    "image/clarkslobby.jpg",
+    "image/clarksresturant.jpg",
+    "image/clarksview.jpg",
+
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0426!3d27.1762!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sHotel%20Clarks%20Shiraz%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-2227777",
+    email: "reservations@clarksshiraz.com",
+   
+  },
+   website: "https://www.hotelclarksshiraz.com/about-us/about-us.html"
+
+},
+
+    {
+  type: "hotel",
+  name: "DoubleTree by Hilton, Agra",
+  img: "image/doubletree.jpg",
+  desc: "A modern hotel with international standards of hospitality.",
+  rating: 4.5,
+  paragraph: "DoubleTree by Hilton offers contemporary rooms, multiple dining options, and a refreshing pool. Known for its warm service and luxury amenities.",
+  rooms: ["Standard Rooms","Executive Rooms","Suites"],
+  facilities: ["Swimming pool","bar","Restaurant","Banquet halls"],
+  timings: "Check-in: 3:00 PM | Check-out: 12:00 PM",
+  entryFee: "Room tariffs start from ₹ 4,200 per night + ₹ 210 taxes & fees",
+  bestTime: "October to March",
+  nearby: "B/H - 1 and 2, Taj Nagri Phase II 2.9 km drive to Shilpgram",
+      gallery: [
+    "image/doubletreeroom.jpg",
+    "image/doubletreepool.jpg",
+    "image/doubletreelobby.jpg",
+    "image/doubletreespa.jpg",
+    "image/doubletreebar.jpg",
+
+  ],
+    map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0424!3d27.1761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sDoubleTree%20by%20Hilton%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4022222",
+    email: "reservations@hiltonagra.com",
+  },
+  website:"https://www.hilton.com/en/hotels/agrdtdi-doubletree-agra/",
+},
+   
+
+ {
+  type: "hotel",
+  name: "Trident Agra",
+  img: "image/trident.jpg",
+  desc: "A 5-star hotel with lush gardens and serene ambience.",
+  rating: 5,
+  paragraph: "Trident Agra offers a peaceful stay with landscaped gardens, swimming pool, and fine dining options. It is family-friendly and close to the Taj Mahal.",
+  rooms: ["Garden View Rooms","Pool View Rooms","Suites"],
+  facilities: ["Swimming pool","Kids play area","Restaurant","Spa","Conference hall"],
+  timings: "Check-in: 2:00 PM | Check-out: 12:00 PM",
+  entryFee: "Room tariffs start from ₹ 5,500 per night+ ₹ 275 taxes & fees",
+  bestTime: "October to March",
+  nearby: "Fatehabad Road, Next to TDI Mall 1.8 km drive to Shilpgram",
+    gallery: [
+    "image/tridentroom.jpg",
+    "image/tridentpool.jpg",
+    "image/tridentconfrence.jpg",
+    "image/tridentglasshouse.jpg",
+    "image/tridentview.jpg",
+  ],
+    map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0430!3d27.1763!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sTrident%20Hotel%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-2233334",
+    email: "reservations@tridenthotels.com",
+  },
+  website:"https://www.tridenthotels.com/hotels-in-agra"
+
+},
+    {
+  type: "hotel",
+  name: "Courtyard by Marriott Agra",
+  img: "image/courtyard.webp",
+  desc: "A luxury hotel offering comfort and style near the Taj Mahal.",
+  rating: 4.5,
+  paragraph: "Courtyard by Marriott Agra features spacious rooms, multiple restaurants, and a large swimming pool. It is ideal for families and business travellers.",
+  rooms: ["Deluxe Rooms","Executive Suites"],
+  facilities: ["Swimming pool","Spa","Fitness centre","Restaurants","Banquet halls"],
+  timings: "Check-in: 2:00 PM | Check-out: 12:00 PM",
+  entryFee: "Room tariffs start from ₹ 4,249 + ₹ 212 taxes & fees",
+  bestTime: "October to March",
+  nearby: "Taj Nagri, Phase II, Fatehabad Road 2 km drive to Shilpgram",
+    gallery: [
+    "image/courtyardroom.jpg",
+    "image/courtyardpool.jpg",
+    "image/courtyardbanquet.jpg",
+    "image/courtyardresturant.jpg",
+    "image/courtyardfitness.jpg",
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0432!3d27.1764!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sCourtyard%20by%20Marriott%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4022222",
+    email: "reservations@courtyardagra.com"
+  },
+  website:"https://www.marriott.com/en-us/hotels/agrcy-courtyard-agra"
+
+},
+    {
+  type: "hotel",
+  name: "PL Palace, Agra",
+  img: "image/plpalace.jpg",
+  desc: "A contemporary hotel offering comfort and convenience in Agra.",
+  rating: 3,
+  paragraph: "PL Palace is known for its modern interiors, spacious rooms, and warm hospitality. It is ideal for both leisure and business travellers.",
+  rooms: ["Superior Rooms","Executive Rooms","Suites"],
+  facilities: ["Restaurant","Banquet hall","Conference facilities","Fitness centre"],
+  timings: "Check-in: 12:00 PM | Check-out: 11:00 AM",
+  entryFee: "Room tariffs start from ₹5,000 per night",
+  bestTime: "October to March",
+  nearby: " M G Road,Sanjay Palace Agra-282002 5 minutes walk to Sanjay Place",
+  gallery: [
+    "image/plroom.jpg",
+    "image/plpool.jpg",
+    "image/plbanquet.jpg",
+    "image/plbar.jpg",
+    "image/pldin.jpg",
+  ],
+    map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0435!3d27.1765!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sPL%20Palace%20Hotel%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4023333",
+    email: "reservations@plpalaceagra.com"
+  },
+  website:"https://www.plpalacehotels.com/"
+
+},
+  {
+  type: "hotel",
+  name: "Foxoso Taj View Hotel, Agra",
+  img: "image/foxoso.jpg",
+  desc: "A premium hotel offering elegant stays with views of the Taj Mahal.",
+  rating: 4.5,
+  paragraph: "Foxoso Taj View Hotel is known for its modern design, spacious rooms, and warm hospitality. Guests can enjoy rooftop dining with Taj Mahal views, relax in the pool, and experience a blend of comfort and luxury.",
+  rooms: [
+    "Deluxe Rooms with city view",
+    "Executive Suites with Taj Mahal view",
+    "Luxury Suites with private balcony"
+  ],
+  facilities: [
+    "Rooftop restaurant with Taj Mahal view",
+    "Swimming pool",
+    "Spa and wellness centre",
+    "Conference and banquet halls",
+    "Fitness centre"
+  ],
+  timings: "Check-in: 2:00 PM | Check-out: 12:00 PM",
+  entryFee: "Room tariffs start from ₹6,500 per night",
+  bestTime: "October to March for pleasant weather",
+  nearby: " NEAR BALU GANJ POLICE CHOWKI AGRA, BALU GANJ, Agra, Uttar Pradesh, 282001 1.7 km drive to Agra Fort",
+  gallery: [
+    "image/foxosoroom.jpg",
+    "image/foxosoview.jpg",
+    "image/foxosodin.jpg",
+    "image/foxosoroof.jpg",
+    "image/foxosobanquet.jpg",
+  ],
+    map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0436!3d27.1766!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sFoxoso%20Hotel%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4033333",
+    email: "reservations@foxosoagra.com"
+  },
+  website:"https://www.foxosohotels.com/taj-mahal-view-hotels-agra"
+
+},  
+
+{
+  type: "hotel",
+  name: "Hotel Alleviate, Agra",
+  img: "image/alleviate.webp",
+  desc: "A boutique hotel offering modern comfort and convenience in Agra.",
+  rating: 4.5,
+  paragraph: "Hotel Alleviate is known for its contemporary design, cozy rooms, and warm hospitality. Guests can enjoy rooftop dining, a relaxing lounge, and easy access to Agra’s famous attractions.",
+  rooms: [
+    "Standard Rooms",
+    "Executive Rooms",
+    "Luxury Suites"
+  ],
+  facilities: [
+    "Rooftop restaurant",
+    "Conference hall",
+    "Banquet facilities",
+    "Fitness centre",
+    "24-hour room service"
+  ],
+  timings: "Check-in: 12:00 PM | Check-out: 11:00 AM",
+  entryFee: "Room tariffs start from ₹ 2,000 per night+ ₹ 220 taxes & fees",
+  bestTime: "October to March for pleasant weather",
+  nearby: " Yamuna Bank Road, 2.9 km drive to Agra Fort",
+  gallery: [
+    "image/alleviateroom.jpg",
+    "image/alleviateroof.jpg",
+    "image/alleviatebanqt.jpg",
+    "image/alleviatedin.jpg",
+    "image/alleviateview.jpg",
+
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0437!3d27.1767!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sHotel%20Aaleviate%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4044444",
+    email: "reservations@aaleviateagra.com"
+  },
+  website:"http://www.hotelalleviate.com/"
+
+},
+{
+  type: "hotel",
+  name: "Grand Mercure, Agra",
+  img: "image/gmcc.webp",
+  desc: "A premium hotel offering modern luxury and comfort in Agra.",
+  rating: 4.5,
+  paragraph: "Grand Mercure Agra is known for its contemporary design, spacious rooms, and excellent hospitality. Guests can enjoy multiple dining options, a rooftop pool, and wellness facilities, making it ideal for both leisure and business travellers.",
+  rooms: [
+    "Deluxe Rooms",
+    "Executive Suites",
+    "Luxury Suites",
+    "Presidential Suite"
+  ],
+  facilities: [
+    "Rooftop swimming pool",
+    "Spa and wellness centre",
+    "Fitness centre",
+    "Multi-cuisine restaurants",
+    "Conference and banquet halls"
+  ],
+  timings: "Check-in: 2:00 PM | Check-out: 12:00 PM",
+  entryFee: "Room tariffs start from ₹8,000 per night",
+  bestTime: "October to March for pleasant weather",
+  nearby: "Fatehabad Road, Tajganj, Agra ",
+  gallery: [
+    "image/gmccroom.jpg",
+    "image/gmccpool.jpg",
+    "image/gmccbar.jpg",
+    "image/gmcchall.jpg",
+    "image/gmccview.jpg",
+
+  ],
+    map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0438!3d27.1768!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sGrand%20Mercure%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4055555",
+    email: "reservations@grandmercureagra.com"
+  },
+   website:"https://all.accor.com/hotel/C0W7/index.en.shtml"
+
+},
+{
+  type: "hotel",
+  name: "Holiday Inn, Agra",
+  img: "image/holidayin.webp",
+  desc: "A modern hotel offering comfort and convenience in Agra.",
+  rating: 4.5,
+  paragraph: "Holiday Inn Agra is known for its contemporary design, spacious rooms, and warm hospitality. Guests can enjoy international dining, a refreshing pool, and family-friendly services, making it ideal for both leisure and business travellers.",
+  rooms: [
+    "Standard Rooms",
+    "Executive Rooms",
+    "Luxury Suites"
+  ],
+  facilities: [
+    "Swimming pool",
+    "Multi-cuisine restaurant",
+    "Fitness centre",
+    "Conference and banquet halls",
+    "24-hour room service"
+  ],
+  timings: "Check-in: 2:00 PM | Check-out: 12:00 PM",
+  entryFee: "Room tariffs start from ₹6,000 per night",
+  bestTime: "October to March for pleasant weather",
+  nearby: "16/2/8, Sanjay Place Commercial Complex Mahatma Gandhi Marg",
+  gallery: [ 
+    "image/holidayroom.jpg",
+    "image/holidaypool.jpg",
+    "image/holidaymeeting.jpg",
+    "image/holidayconfrence.jpg",
+    "image/holidaycafe.jpg",
+
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0439!3d27.1769!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sHoliday%20Inn%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4066666",
+    email: "reservations@holidayinnagra.com"
+  },
+  website:"https://www.holidayinn.com/hotels/gb/en/agra/agrmg/hoteldetail"
+
+},
+{
+  type: "hotel",
+  name: "Lemon Tree Hotel, Agra",
+  img: "image/lemontree.jpg",
+  desc: "A vibrant hotel offering affordable luxury and cheerful ambience in Agra.",
+  rating: 4.5,
+  paragraph: "Lemon Tree Hotel Agra is popular for its bright interiors, cozy rooms, and budget-friendly luxury. Guests can enjoy rooftop dining, a refreshing pool, and modern amenities with a lively atmosphere.",
+  rooms: [
+    "Deluxe Rooms",
+    "Executive Rooms",
+    "Suites"
+  ],
+  facilities: [
+    "Rooftop restaurant",
+    "Swimming pool",
+    "Fitness centre",
+    "Conference hall",
+    "Banquet facilities"
+  ],
+  timings: "Check-in: 2:00 PM | Check-out: 12:00 PM",
+  entryFee: "Room tariffs start from ₹5,000 per night",
+  bestTime: "October to March for pleasant weather",
+  nearby: "NH 2, near St. Conrad's Inter College, Bypass Road, Khandari, Agra, Uttar Pradesh",
+  gallery: [
+    "image/lemonpool.jpg",
+    "image/lemondin.jpg",
+    "image/lemonhall.jpg",
+    "image/lemonview.jpg",
+    "image/lemonroom.jpg",
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0440!3d27.1770!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sLemon%20Tree%20Hotel%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4077777",
+    email: "reservations@lemontreeagra.com"
+  },
+  website:"https://www.lemontreehotels.com/lemon-tree-hotel/agra/hotel-agra/"
+
+},
+{
+  type: "food",
+  name: "Agra Petha",
+  img: "image/petha.webp",
+  desc: "Agra’s most famous sweet made from ash gourd.",
+  paragraph: "Agra Petha is a translucent soft candy, available in many flavours like kesar, chocolate, and paan. It is a must-try delicacy when visiting Agra.",
+  varieties: [
+    "Kesar Petha",
+    "Angoori Petha",
+    "Chocolate Petha",
+    "Paan Petha"
+  ],
+  bestPlaces: [
+    "Panchi Petha",
+    "Bhimseni Petha Shop",
+    "Pracheen Petha Stores"
+  ],
+  priceRange: "₹200 – ₹500 per kg",
+  bestTime: "All year round",
+  gallery: [
+    "image/petha1.jpg",
+    "image/petha2.jpg",
+    "image/petha3.jpg",
+    "image/petha4.jpg",
+    "image/petha5.jpg"
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0431!3d27.1771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sPanchi%20Petha%20Store%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4088888",
+    email: "info@panchipetha.com"
+  }
+
+},
+{
+  type: "food",
+  name: "Bedai & Jalebi",
+  img: "image/jalebi.png",
+  desc: "A traditional breakfast of Agra, spicy bedai with sweet jalebi.",
+  paragraph: "Bedai is a spiced puri served with aloo sabzi, paired with crispy jalebi. This combination is a popular breakfast among locals.",
+  varieties: ["Bedai with aloo sabzi","Crispy Jalebi"],
+  bestPlaces: ["Deviram Sweets","Bhagat Halwai","Sadar Bazaar stalls"],
+  priceRange: "₹50 – ₹150 per plate",
+  bestTime: "Morning hours",
+  gallery: [
+  "image/bedai1.jpg",
+  "image/jalebi1.jpg",
+  "image/bedai2.jpg",
+  "image/jalebi2.jpg",
+],
+ map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0433!3d27.1773!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sRawatpara%20Bedai%20Jalebi%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4100000",
+    email: "info@agrafoods.com"
+  }
+
+},
+
+{
+  type: "food",
+  name: "Mughlai Cuisine",
+  img: " image/mughlai.jpg",
+  desc: "Rich and aromatic dishes inspired by Mughal heritage.",
+  paragraph: "Agra is famous for Mughlai delicacies like kebabs, korma, and biryani. These dishes are cooked with aromatic spices and rich gravies.",
+  varieties: ["Kebabs","Korma","Biryani","Nihari"],
+  bestPlaces: ["Pinch of Spice","Mama Chicken","ITC Mughal Restaurants"],
+  priceRange: "₹300 – ₹1000 per dish",
+  bestTime: "Lunch and Dinner",
+  gallery: [
+  "image/mughlai1.jpg",
+  "image/mughlai2.jpg",
+  "image/mughlai3.jpg",
+  "image/mughlai4.jpg",
+
+],
+ map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0432!3d27.1772!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sMughlai%20Restaurant%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4099999",
+    email: "info@mughlaiagra.com"
+  }
+
+},
+
+{
+  type: "food",
+  name: "Dal Moth",
+  img: "image/dalmoth.webp",
+  desc: "A crunchy, spicy lentil snack from Agra.",
+  paragraph: "Dal Moth is a dry snack made of fried lentils, nuts, and spices. It is a popular take-home snack for tourists.",
+  varieties: ["Classic Dal Moth","Nutty Dal Moth","Spicy Dal Moth"],
+  bestPlaces: ["Baluganj Market","Panchi Petha Stores"],
+  priceRange: "₹150 – ₹400 per kg",
+  bestTime: "All year round",
+  gallery: [
+  "image/dalmoth1.jpg",
+  "image/dalmoth2.jpg",
+  "image/dalmoth3.jpg",
+],
+map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0442!3d27.1774!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sPanchi%20Petha%20%26%20Dal%20Moth%20Store%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4122222",
+    email: "info@agrafoods.com",
+  }
+},
+ { 
+type: "food",
+  name: "Agra Street Chaat",
+  img: "image/chaat.jpg",
+  desc: "Tangy and spicy street food loved by locals.",
+  paragraph: "Agra’s street chaat includes golgappa, aloo tikki, and dahi bhalla. It is a must-try for food lovers.",
+  varieties: ["Golgappa","Aloo Tikki","Dahi Bhalla","Papdi Chaat"],
+  bestPlaces: ["Sadar Bazaar","Chaat Gali","Agra Cantt stalls"],
+  priceRange: "₹50 – ₹200 per plate",
+  bestTime: "Evening hours",
+  gallery: ["image/chatt1.jpg",
+  "image/chaat2.jpg",
+  "image/chaat3.jpg",
+  "image/chaat4.jpg",
+],
+  map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0443!3d27.1775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sAgra%20Street%20Chaat%20Bazaar!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4133333",
+    email: "info@agrafoods.com"
+  }
+
+},
+
+{
+  type: "food",
+  name: "Agra Tandoori Chicken",
+  img: "image/chicken.webp",
+  desc: "A smoky and spicy chicken delicacy cooked in clay oven.",
+  paragraph: "Agra is famous for its Mughlai-style tandoori chicken, marinated in yogurt and spices, then cooked in a traditional clay oven. It is served with mint chutney and onion rings.",
+  varieties: ["Classic Tandoori Chicken","Butter Tandoori","Spicy Tandoori"],
+  bestPlaces: ["Mama Chicken","Pinch of Spice","Sadar Bazaar eateries"],
+  priceRange: "₹250 – ₹600 per plate",
+  bestTime: "Dinner time",
+  gallery: ["image/tandoori1.jpg","image/tandoori2.jpg","image/tandoori3.jpg", ],
+  map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0441!3d27.1772!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sAgra%20Tandoori%20Chicken%20Restaurant!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4111111",
+    email: "info@agrafoods.com"
+  }
+
+},
+
+{
+  type: "food",
+  name: "Kachori & Sabzi",
+  img: " image/kachori.jpg",
+  desc: "A popular street breakfast of Agra, crispy kachori with spicy sabzi.",
+  paragraph: "Agra’s kachori is stuffed with lentils and spices, served hot with tangy aloo sabzi. It is a favourite morning snack among locals.",
+  varieties: ["Dal Kachori","Masala Kachori","Aloo Sabzi"],
+  bestPlaces: ["Deviram Sweets","Bhagat Halwai","Local stalls in Agra Cantt"],
+  priceRange: "₹40 – ₹120 per plate",
+  bestTime: "Morning hours",
+  gallery: ["image/kachori1.jpg",
+  "image/kachori2.jpg",
+  "image/kachori3.jpg"],
+    map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0444!3d27.1776!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sRawatpara%20Kachori%20Sabzi%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4144444",
+    email: "info@agrafoods.com"
+  }
+
+},
+
+{
+  type: "food",
+  name: "Agra Rabri",
+  img: "image/rabri.jpg",
+  desc: "A rich and creamy sweet made from thickened milk.",
+  paragraph: "Rabri is a traditional North Indian dessert made by boiling milk until thick, then flavored with cardamom, saffron, and dry fruits. In Agra, it is often served with jalebi or malpua, especially in Sadar Bazaar.",
+  varieties: ["Classic Rabri","Kesar Rabri","Dry Fruit Rabri"],
+  bestPlaces: ["Sadar Bazaar sweet shops","Deviram Sweets","Bhagat Halwai"],
+  priceRange: "₹100 – ₹250 per bowl",
+  bestTime: "Evening or after meals",
+  gallery: [
+  "image/rabri1.jpg",
+  "image/rabri2.jpg",
+  "image/rabri3.jpg"],
+    map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0445!3d27.1777!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sAgra%20Rabri%20Shop!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4155555",
+    email: "info@agrafoods.com"
+  }
+
+},
+{
+  type: "food",
+  name: "Kulfi Falooda",
+  img: "image/kulfi.jpg",
+  desc: "A creamy frozen dessert served with falooda and rose syrup.",
+  paragraph: "Kulfi Falooda is a popular sweet treat in Sadar Bazaar. Thick kulfi is topped with falooda (vermicelli), rose syrup, and dry fruits, making it a refreshing dessert for evenings.",
+  varieties: ["Kesar Kulfi","Pista Kulfi","Rabri Kulfi Falooda"],
+  bestPlaces: ["Sadar Bazaar kulfi stalls","Gopal Das Kulfi","Local street vendors"],
+  priceRange: "₹80 – ₹200 per plate",
+  bestTime: "Evening hours, especially in summer",
+  gallery: [
+    "image/kulfi1.jpg",
+    "image/kulfi2.jpg",
+    "image/kulfi3.jpg",
+    "image/kulfi4.jpg",
+    "image/kulfi5.jpg",
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0446!3d27.1778!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sFakuda%20Kulfi%20Agra!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4166666",
+    email: "info@agrafoods.com"
+  }
+
+},
+{
+  type: "food",
+  name: "Bhalla Papdi Chaat",
+  img: "image/bhalla.jpg",
+  desc: "A tangy and spicy street chaat loved by locals.",
+  paragraph: "Bhalla Papdi Chaat is made with crispy papdi, soft dahi bhalla, chutneys, and spices. In Sadar Bazaar, this chaat is a must-try for its perfect balance of sweet, sour, and spicy flavors.",
+  varieties: ["Classic Bhalla Papdi","Sweet Bhalla Chaat","Spicy Bhalla Chaat"],
+  bestPlaces: ["Sadar Bazaar Chaat Gali","Local stalls near Agra Cantt","Bhagat Halwai"],
+  priceRange: "₹60 – ₹150 per plate",
+  bestTime: "Evening hours",
+  gallery: [
+  "image/bhalla1.jpg",
+  "image/bhalla2.jpg",
+  "image/bhalla3.jpg",
+  "image/bhalla4.jpg",
+  
+],
+ map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0447!3d27.1779!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sAgra%20Bhalla%20Papdi%20Chaat%20Corner!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4177777",
+    email: "info@agrafoods.com"
+  }
+
+},
+{
+  type: "food",
+  name: "Chole Bhature",
+  img: "image/bhature.jpg",
+  desc: "A hearty North Indian dish of spicy chickpeas with fluffy fried bread.",
+  paragraph: "Chole Bhature is a popular street food in Agra, especially in Sadar Bazaar. The spicy chole (chickpeas) are cooked with aromatic spices and served with hot, fluffy bhature. It is a filling and flavorful dish loved by locals and tourists alike.",
+  varieties: ["Classic Chole Bhature","Paneer Bhature","Spicy Chole Bhature"],
+  bestPlaces: ["Sadar Bazaar dhabas","Deviram Sweets","Local halwai shops"],
+  priceRange: "₹80 – ₹200 per plate",
+  bestTime: "Morning and evening meals",
+  gallery: [
+    "image/bhature1.jpg",
+    "image/bhature2.jpg",
+    "image/bhature3.jpg",
+  ],
+   map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.987654321!2d78.0448!3d27.1780!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397477abcdef123%3A0x987654321abcdef!2sAgra%20Chole%20Bhature%20Corner!5e0!3m2!1sen!2sin!4v1712345678901",
+  contact: {
+    phone: "+91-562-4188888",
+    email: "info@agrafoods.com"
+  }
+
+}
+   
+    
+];
+
+let searchInput = document.getElementById("searchInput");
+let filter = document.getElementById("filter");
+let results = document.getElementById("results");
+let suggestions = document.getElementById("suggestions");
+
+searchInput.addEventListener("keyup", showResults);
+
+function showResults() {
+    let value = searchInput.value.toLowerCase();
+    let filterValue = filter.value;
+
+    results.innerHTML = "";
+    suggestions.innerHTML = "";
+
+    let filtered = data.filter(item => 
+        (filterValue === "all" || item.type === filterValue) &&
+        item.name.toLowerCase().includes(value)
+    );
+
+    // Suggestions
+    filtered.slice(0,5).forEach(item => {
+        let div = document.createElement("div");
+        div.textContent = item.name;
+        div.onclick = () => {
+            searchInput.value = item.name;
+            suggestions.innerHTML = "";
+            showResults();
+        };
+        suggestions.appendChild(div);
+    });
+
+    // Cards
+    filtered.forEach((item, index) => {
+        let stars = "⭐".repeat(Math.floor(item.rating));
+
+        let card = `
+        <div class="card" onclick="openDetail(${index})">
+            <img src="${item.img}">
+            <h3>${item.name}</h3>
+            <p>${item.desc}</p>
+            <div class="stars">${stars}</div>
+        </div>
+        `;
+        results.innerHTML += card;
+    });
+}
+
+// Detail page open
+function openDetail(index) {
+    let item = data[index];
+    localStorage.setItem("selectedItem", JSON.stringify(item));
+    window.location.href = "detail.html";
+}
+showResults();
+
+
+
+
+</script>
+
+</body>
+</html>
